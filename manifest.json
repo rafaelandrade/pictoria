@@ -1,0 +1,13 @@
+{
+  "id": "1430261321043598834",
+  "api": "1.0.0",
+  "name": "Pictoria",
+  "main": "build/main.js",
+  "ui": "ui.html",
+  "editorType": ["figma", "figjam"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "This plugin requires access to all domains to fetch resources from multiple APIs, including Giphy, Unsplash, and OpenAI, which enhance the user's design experience."
+  }
+}

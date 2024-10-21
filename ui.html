@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #FAF4E6; /* Light background similar to the logo */
+      color: #3E1F25; /* Dark purple from the logo for text */
+    }
+
+    /* Logo and title container */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    /* Adjust the logo size */
+    .header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .header h2 {
+      font-size: 24px;
+      color: #3E1F25; /* Dark purple */
+      margin: 0;
+    }
+
+    /* Tab navigation */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tabs button {
+      background-color: #3E1F25;
+      color: #FAF4E6;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background-color 0.3s;
+    }
+
+    .tabs button.active {
+      background-color: #A55C68;
+    }
+
+    .tabs button:hover {
+      background-color: #A55C68;
+    }
+
+    /* Hide content by default */
+    .tab-content {
+      display: none;
+    }
+
+    /* Show active tab content */
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Input and button styling */
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      padding: 10px;
+      background-color: #3E1F25; /* Dark purple */
+      color: #FAF4E6; /* Light beige from the logo */
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      transition: background-color 0.3s;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background-color: #A55C68; /* Lighter version of the purple for hover */
+    }
+
+    /* Image grid styling */
+    .image-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .image-container img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 15px 12px;
+      margin: 0 30px;
+      background-color: #3E1F25;
+      color: #FAF4E6;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100px;
+    }
+
+    .pagination button.disabled {
+      background-color: #ddd; /* Greyed out */
+      cursor: not-allowed;
+    }
+    .pagination button:hover {
+      background-color: #A55C68;
+    }
+
+    .loading {
+      display: none; /* Hidden by default */
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .poweredContent div {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h2>Pictoria</h2>
+</div>
+
+<div class="tabs">
+  <button id="unsplashTab" class="active">Unsplash</button>
+  <button id="giphyTab">Giphy</button>
+  <button id="openaiTab">OpenAi</button>
+</div>
+
+<!-- Unsplash Tab Content -->
+<div id="unsplashContent" class="tab-content active">
+  <input type="text" id="unsplashSearchTerm" placeholder="Search Unsplash...">
+  <button id="unsplashSearchButton">Search</button>
+  <div id="unsplashImages" class="image-container"></div>
+  <div class="pagination">
+    <button id="unsplashPrevPage" disabled>Previous</button>
+    <span id="unsplashPageInfo"></span>
+    <button id="unsplashNextPage">Next</button>
+  </div>
+  <div>
+    <h5>Powered by Unsplash</h5>
+  </div>
+</div>
+
+<!-- Giphy Tab Content -->
+<div id="giphyContent" class="tab-content">
+  <input type="text" id="giphySearchTerm" placeholder="Search Giphy...">
+  <button id="giphySearchButton">Search</button>
+  <div id="giphyImages" class="image-container"></div>
+  <div class="pagination">
+    <button id="giphyPrevPage" disabled>Previous</button>
+    <span id="giphyPageInfo"></span>
+    <button id="giphyNextPage">Next</button>
+  </div>
+  <div id="poweredContent">
+    <h5>Powered by GIPHY</h5>
+  </div>
+</div>
+
+
+<!-- OpenAi Tab Content -->
+<div id="openaiContent" class="tab-content">
+  <input type="text" id="openaiSearchTerm" placeholder="Generate image...">
+  <button id="openaiSearchButton">Search</button>
+  <div class="loading" id="openaiLoading">Generating...</div>
+  <div id="openaiImages" class="image-container"></div>
+  <div>
+    <h5>Powered by OpenAI</h5>
+  </div>
+</div>
+
+<script>
+  const unsplashTab = document.getElementById('unsplashTab');
+  const giphyTab = document.getElementById('giphyTab');
+  const openaiTab = document.getElementById('openaiTab')
+  const unsplashContent = document.getElementById('unsplashContent');
+  const giphyContent = document.getElementById('giphyContent');
+  const openaiContent = document.getElementById('openaiContent')
+
+  // Tab switching logic
+  unsplashTab.addEventListener('click', () => {
+    unsplashTab.classList.add('active');
+    giphyTab.classList.remove('active');
+    openaiTab.classList.remove('active')
+    unsplashContent.classList.add('active');
+    giphyContent.classList.remove('active');
+    openaiContent.classList.remove('active')
+  });
+
+  giphyTab.addEventListener('click', () => {
+    giphyTab.classList.add('active');
+    unsplashTab.classList.remove('active');
+    openaiTab.classList.remove('active')
+    giphyContent.classList.add('active');
+    unsplashContent.classList.remove('active');
+    openaiContent.classList.remove('active')
+  });
+
+  openaiTab.addEventListener('click', () => {
+    giphyTab.classList.remove('active');
+    unsplashTab.classList.remove('active');
+    openaiTab.classList.add('active')
+    giphyContent.classList.remove('active');
+    unsplashContent.classList.remove('active');
+    openaiContent.classList.add('active');
+  })
+
+  const unsplashSearchButton = document.getElementById('unsplashSearchButton');
+  const unsplashSearchTerm = document.getElementById('unsplashSearchTerm');
+  const unsplashImages = document.getElementById('unsplashImages');
+  const unsplashPrevPage = document.getElementById('unsplashPrevPage');
+  const unsplashNextPage = document.getElementById('unsplashNextPage');
+  const unsplashPageInfo = document.getElementById('unsplashPageInfo');
+
+  let unsplashCurrentPage = 1;
+  let unsplashTotalPages = 1;
+  let currentSearchTerm = '';
+
+  unsplashSearchButton.addEventListener('click', () => {
+    currentSearchTerm = unsplashSearchTerm.value;
+    unsplashCurrentPage = 1; // Reset to the first page
+    fetchImages(currentSearchTerm, unsplashCurrentPage);
+  });
+
+  unsplashPrevPage.addEventListener('click', () => {
+    if (unsplashCurrentPage > 1) {
+      unsplashCurrentPage--;
+      fetchImages(currentSearchTerm, unsplashCurrentPage);
+    }
+  });
+
+  unsplashNextPage.addEventListener('click', () => {
+    if (unsplashCurrentPage < unsplashTotalPages) {
+      unsplashCurrentPage++;
+      fetchImages(currentSearchTerm, unsplashCurrentPage);
+    }
+  });
+
+  function fetchImages(searchTerm, page) {
+    parent.postMessage({ pluginMessage: { type: 'search', searchTerm, page } }, '*');
+  }
+
+  const openaiSearchButton = document.getElementById('openaiSearchButton')
+  const openaiSearchTerm = document.getElementById('openaiSearchTerm')
+  const openaiImages = document.getElementById('openaiImages')
+  const openaiLoading = document.getElementById('openaiLoading');
+
+  openaiSearchButton.addEventListener('click', () => {
+    const query = openaiSearchTerm.value;
+
+    openaiLoading.style.display = 'block';
+    fetchOpenaiImages(query)
+  })
+
+  function fetchOpenaiImages(searchTerm, page) {
+    parent.postMessage({ pluginMessage: { type: 'search-openai', searchTerm } }, '*');
+
+    openaiImages.innerHTML = '';
+  }
+
+  // Giphy logic
+  const giphySearchButton = document.getElementById('giphySearchButton');
+  const giphySearchTerm = document.getElementById('giphySearchTerm');
+  const giphyImages = document.getElementById('giphyImages');
+  const giphyPrevPage = document.getElementById('giphyPrevPage');
+  const giphyNextPage = document.getElementById('giphyNextPage');
+  const giphyPageInfo = document.getElementById('giphyPageInfo');
+
+  let giphyCurrentPage = 1;
+  let giphyTotalPages = 1;
+
+  giphySearchButton.addEventListener('click', () => {
+    const query = giphySearchTerm.value;
+    fetchGiphyImages(query, giphyCurrentPage);
+  });
+
+  giphyPrevPage.addEventListener('click', () => {
+    if (giphyCurrentPage > 1) {
+      giphyCurrentPage--;
+      fetchGiphyImages(giphySearchTerm.value, giphyCurrentPage);
+    }
+  });
+
+  giphyNextPage.addEventListener('click', () => {
+    if (giphyCurrentPage < giphyTotalPages) {
+      giphyCurrentPage++;
+      fetchGiphyImages(giphySearchTerm.value, giphyCurrentPage);
+    }
+  });
+
+  function fetchGiphyImages(searchTerm, page) {
+    parent.postMessage({ pluginMessage: { type: 'search-giphy', searchTerm, page } }, '*');
+  }
+
+  window.onmessage = (event) => {
+    console.log('Event ->< ', event)
+
+    if (event.data.pluginMessage.type === 'openai') {
+      const {images, totalPages: total} = event.data.pluginMessage
+
+      openaiLoading.style.display = 'none';
+      openaiImages.innerHTML = ''
+
+      images.forEach(image => {
+        const imgElement = document.createElement('img')
+        imgElement.src = image.url
+        imgElement.addEventListener('click', () => {
+          parent.postMessage({ pluginMessage: { type: 'insert-images-openai', imageUrl: image.url } }, '*');
+        });
+        openaiImages.appendChild(imgElement)
+      })
+    }
+
+    if (event.data.pluginMessage.type === 'giphy') {
+      const { images, totalPages: total } = event.data.pluginMessage;
+
+      giphyTotalPages = total
+      giphyImages.innerHTML = '';
+
+      images.forEach(gif => {
+        const imgElement = document.createElement('img');
+        imgElement.src = gif.url;
+        imgElement.addEventListener('click', () => {
+          parent.postMessage({ pluginMessage: { type: 'insert-images', imageUrl: gif.url } }, '*');
+        });
+        giphyImages.appendChild(imgElement);
+      })
+
+      giphyPrevPage.disabled = giphyCurrentPage === 1;
+      giphyNextPage.disabled = giphyCurrentPage === giphyTotalPages;
+      giphyPageInfo.textContent = `Page ${giphyCurrentPage} of ${giphyTotalPages}`;
+    }
+
+    if (event.data.pluginMessage.type === 'unsplash') {
+      const { images, totalPages: total } = event.data.pluginMessage;
+      unsplashTotalPages = total; // Update total pages
+      unsplashImages.innerHTML = '';
+
+      images.forEach(image => {
+        const imgElement = document.createElement('img');
+        imgElement.src = image.urls.thumb;
+        imgElement.addEventListener('click', () => {
+          parent.postMessage({ pluginMessage: { type: 'insert-images', imageUrl: image.urls.regular } }, '*');
+        });
+        unsplashImages.appendChild(imgElement);
+      });
+
+      unsplashPrevPage.disabled = unsplashCurrentPage === 1; // Disable if on the first page
+      unsplashNextPage.disabled = unsplashCurrentPage === unsplashTotalPages; // Disable if on the last page
+      unsplashPageInfo.textContent = `Page ${unsplashCurrentPage} of ${unsplashTotalPages}`;
+    }
+
+  };
+</script>
+</body>
+</html>
