@@ -56,7 +56,7 @@ cd pictoria
 - Choose the `manifest.json` file from the plugin directory.
 
 ### 3. Run the Plugin
-- Once linked, run your plugin from Figma's plugin menu by selecting **Plugins** > **Development** > **[Your Plugin Name]**.
+- Once linked, run your plugin from Figma's plugin menu by selecting **Plugins** > **Development** > **Pictoria**.
 
 ### 4. Start Testing
 - Now you can use the plugin in Figma locally to test GIF searches, Unsplash images, and AI-generated visuals.
