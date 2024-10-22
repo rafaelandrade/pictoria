@@ -8,8 +8,8 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #FAF4E6; /* Light background similar to the logo */
-      color: #3E1F25; /* Dark purple from the logo for text */
+      background-color: #F3E8FF; /* Light purple background */
+      color: #4B0082; /* Darker purple for text */
     }
 
     /* Logo and title container */
@@ -28,8 +28,9 @@
 
     .header h2 {
       font-size: 24px;
-      color: #3E1F25; /* Dark purple */
+      color: #4B0082; /* Dark purple */
       margin: 0;
+      margin-right: 40px;
     }
 
     /* Tab navigation */
@@ -40,8 +41,8 @@
     }
 
     .tabs button {
-      background-color: #3E1F25;
-      color: #FAF4E6;
+      background-color: #7B1FA2; /* Medium purple */
+      color: #F3E8FF; /* Light purple */
       padding: 10px 20px;
       border: none;
       border-radius: 6px;
@@ -51,11 +52,11 @@
     }
 
     .tabs button.active {
-      background-color: #A55C68;
+      background-color: #9C27B0; /* Active tab: Lighter purple */
     }
 
     .tabs button:hover {
-      background-color: #A55C68;
+      background-color: #9C27B0; /* Hover: Lighter purple */
     }
 
     /* Hide content by default */
@@ -75,14 +76,14 @@
       margin-bottom: 10px;
       font-size: 16px;
       border-radius: 6px;
-      border: 1px solid #ddd;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #7B1FA2;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 2);
     }
 
     button {
       padding: 10px;
-      background-color: #3E1F25; /* Dark purple */
-      color: #FAF4E6; /* Light beige from the logo */
+      background-color: #7B1FA2; /* Darker purple */
+      color: #F3E8FF; /* Light purple */
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -93,7 +94,7 @@
     }
 
     button:hover {
-      background-color: #A55C68; /* Lighter version of the purple for hover */
+      background-color: #9C27B0; /* Lighter purple on hover */
     }
 
     /* Image grid styling */
@@ -126,8 +127,8 @@
     .pagination button {
       padding: 15px 12px;
       margin: 0 30px;
-      background-color: #3E1F25;
-      color: #FAF4E6;
+      background-color: #7B1FA2; /* Dark purple */
+      color: #F3E8FF;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -139,8 +140,9 @@
       background-color: #ddd; /* Greyed out */
       cursor: not-allowed;
     }
+
     .pagination button:hover {
-      background-color: #A55C68;
+      background-color: #9C27B0; /* Hover effect */
     }
 
     .loading {
@@ -333,8 +335,6 @@
   }
 
   window.onmessage = (event) => {
-    console.log('Event ->< ', event)
-
     if (event.data.pluginMessage.type === 'openai') {
       const {images, totalPages: total} = event.data.pluginMessage
 
@@ -373,7 +373,7 @@
 
     if (event.data.pluginMessage.type === 'unsplash') {
       const { images, totalPages: total } = event.data.pluginMessage;
-      unsplashTotalPages = total; // Update total pages
+      unsplashTotalPages = total;
       unsplashImages.innerHTML = '';
 
       images.forEach(image => {
